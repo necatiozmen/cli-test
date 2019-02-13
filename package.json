@@ -1,0 +1,29 @@
+{
+  "name": "cli-exercise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "preferGlobal": true,
+  "bin": "./index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "commander": "^2.19.0",
+    "figlet": "^1.2.1",
+    "inquirer": "^6.2.2",
+    "mustache": "^3.0.1",
+    "pug": "^2.0.3"
+  },
+  "plugins": [
+    "transform-react-pug",
+    "transform-react-jsx"
+  ],
+  "devDependencies": {
+    "babel-plugin-transform-react-pug": "^7.0.0"
+  }
+}
