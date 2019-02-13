@@ -8,7 +8,13 @@ const showQuestions = () => {
         {
             type: 'input',
             name: 'fileName',
-            message: 'Enter functional component name'
+            message: 'Enter class based component name'
+        },
+        {
+            type: 'confirm',
+            name: 'isConnectStore',
+            message: 'Do you want to connect store',
+            default: false
         },
         {
             type: 'confirm',
@@ -19,11 +25,10 @@ const showQuestions = () => {
     ];
 
     inquirer.prompt(questions).then(answers => {
-        console.log(answers);
-
         fs.writeFile(path.resolve(__dirname, `../../${answers.fileName}.tsx`),
-            mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/components/functional.mustache'), 'utf8'),
-                { fileName: answers.fileName, interfaceName: `I${answers.fileName}`, isHaveStyle: answers.isHaveStyle })
+            mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/components/class.mustache'), 'utf8'),
+                { fileName: answers.fileName, interfaceName: `I${answers.fileName}`, 
+                isConnectStore:answers.isConnectStore, isHaveStyle: answers.isHaveStyle })
             , err => {
                 if (err) throw err;
                 console.log("created new functional component");

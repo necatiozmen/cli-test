@@ -2,9 +2,9 @@
 import React from 'react';
 //#endregion Global Imports
 
-//#region Local Imports
-import './Styles.scss';
-//#endregion Local Imports
+{{#isHaveStyle}}
+import './style.scss';
+{{/isHaveStyle}}
 
 //#region Interface Imports
 import { {{interfaceName}} } from './InfoCard';
