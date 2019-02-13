@@ -9,6 +9,7 @@ const program = require('commander');
 const fs = require('fs');
 
 const mustache = require("mustache");
+const funcComp = require('./helper_scripts/cli-commands/functional-component');
 
 clear();
 
@@ -57,8 +58,7 @@ program
     .alias('ap')
     .description('Add a file')
     .action(() => {
-       console.log("pages add");
-       
+        funcComp.showQuestions();
     }
     );
 
