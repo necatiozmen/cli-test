@@ -88,7 +88,6 @@ const createClassComponent = (answers) => {
 
   /* Add interface */
   createInterface(answers, isClass = true);
-
 }
 
 /* const createPage = (answers) => {
