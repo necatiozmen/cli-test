@@ -1,4 +1,7 @@
 const inquirer = require('inquirer');
+const mustache = require("mustache");
+const fs = require('fs');
+const path = require('path');
 const helper = require('./helper');
 
 const showQuestions = () => {
@@ -6,17 +9,18 @@ const showQuestions = () => {
         {
             type: 'input',
             name: 'fileName',
-            message: 'Enter class based component name',
+            message: 'Enter new page name',
             validate(val) {
-                if (val.length) {
-                    if (
+                
+                if(val.length) {                    
+                    if(
                         helper.isAlreadyExist(
-                            helper.config.componentsDir,
+                            helper.config.pagesDir,
                             val,
                             true
                         )
                     ) {
-                        return "Already added use new compoment name";
+                        return "Already added use new page name";
                     }
                     return true;
                 }
@@ -38,10 +42,12 @@ const showQuestions = () => {
     ];
 
     inquirer.prompt(questions).then(answers => {
+        answers.isPage = true;
         helper.createClassComponent(answers);
         if (answers.isHaveStyle) {
             helper.createStyle(answers)
         }
+       
     }
     )
 }

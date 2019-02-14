@@ -1,0 +1,12 @@
+//#region Global Imports
+import { Props } from 'react';
+//#endregion Global Imports
+
+declare module I{{fileName}} {
+    export interface IProps extends Props<{}> {
+  
+    }
+    {{#isClass}}
+    export interface IState { }
+    {{/isClass}}
+}

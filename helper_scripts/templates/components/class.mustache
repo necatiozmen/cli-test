@@ -10,12 +10,12 @@ import { {{interfaceName}}, IStore } from '@Interfaces';
 
 //#region Local Imports
 {{#isHaveStyle}}
-import './style.scss';
+import './Styles.scss';
 {{/isHaveStyle}}
 //#endregion Local Imports
 
 //#region Interface Imports
-import { {{interfaceName}} } from '@Interfaces';
+import { {{interfaceName}} } from './{{interfaceName}}';
 //#endregion Interface Imports
 
 class {{fileName}} extends React.Component<{{interfaceName}}.IProps, {{interfaceName}}.IState> {
