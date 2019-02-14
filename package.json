@@ -16,14 +16,7 @@
     "commander": "^2.19.0",
     "figlet": "^1.2.1",
     "inquirer": "^6.2.2",
-    "mustache": "^3.0.1",
-    "pug": "^2.0.3"
+    "mustache": "^3.0.1"
   },
-  "plugins": [
-    "transform-react-pug",
-    "transform-react-jsx"
-  ],
-  "devDependencies": {
-    "babel-plugin-transform-react-pug": "^7.0.0"
-  }
+  "devDependencies": {}
 }
