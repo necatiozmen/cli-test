@@ -8,11 +8,12 @@ import thunkMiddleware from 'redux-thunk';
 //#region Local Imports
 import * as Reducers from '@Reducers';
 import { RavenService } from '@Services';
-import { reducersList } from '@reducers';
 //#endregion Local Imports
 
 export const initStore = (initialState = {}) => {
-	const reducers = combineReducers(reducersList);
+	const reducers = combineReducers({
+		auth: Reducers.AuthReducer,
+	});
 
 	const ravenInstance = RavenService.getRavenInstance();
 
