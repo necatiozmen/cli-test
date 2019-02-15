@@ -7,7 +7,8 @@ const config = {
   componentsDir: '../../components',
   templatesDir: '../templates/',
   reducerDir: '../../Redux/Reducers',
-  reducersListDir: '../../Redux'
+  reducersListDir: '../../Redux',
+  storeDir: '../../Redux'
 
 };
 
@@ -18,28 +19,7 @@ const isAlreadyExist = (startPath, val, checkForDir) => {
     return fs.existsSync(path.resolve(__dirname, `${startPath}/${val}`));
   }
 
-  /*   const files = fs.readdirSync(startPath);
-  
-    console.log(files);
-     */
-
-  /*   for (let i = 0; i < files.length; i += 1) {
-  
-      const filename = path.join(startPath, files[i]);
-      console.log(filename);
-      
-      const stat = fs.lstatSync(filename);
-      console.log(stat.isDirectory());
-      
-      if (stat.isDirectory()) {
-        isUsedOnDir(filename, val); // recurse
-      } else if (filename.indexOf(val) >= 0) {
-        isFound = true;
-      }
-    } */
-
 }
-
 
 const createFuncComponent = (answers) => {
 
@@ -94,7 +74,8 @@ const createClassComponent = (answers) => {
 
 
 const addReducer = (answers) => {
-	
+
+  /* Create reducer file */
   fs.mkdirSync(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}`));
 
   fs.writeFile(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}/index.tsx`),
@@ -106,7 +87,6 @@ const addReducer = (answers) => {
     })
 
   /* Add to reducers index.ts */
-
   fs.appendFile(path.resolve(__dirname, `${config.reducerDir}/index.ts`),
     mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/index.mustache'), 'utf8'),
       { fileName: answers.fileName }) + "\n",
@@ -116,38 +96,40 @@ const addReducer = (answers) => {
     }
   );
 
-	/* Add to reducerlist */
-  const reducersFile = fs.readFileSync(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`), 'utf8');
-  
-   const replaceFile = reducersFile.replace(/};/g,
-       mustache.render(
-		   fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducers-list.mustache'), 'utf8'),
-          		 { fileName: answers.fileName }));
+  /* Add to store-list */
+  const storeFile = fs.readFileSync(path.resolve(__dirname, `${config.storeDir}/store.ts`), 'utf8');
 
-   
-	fs.writeFile(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`),
-		replaceFile,
-		err => {
-			if (err) throw err;
-			console.log("Added reducers-list");
-		}
-	);
+  const replaceStore = storeFile.replace(/const reducers = combineReducers[(][{]/g,
+    mustache.render(
+      fs.readFileSync(path.resolve(__dirname, '../templates/reducers/store.mustache'), 'utf8'),
+      { fileName: answers.fileName }));
 
-
-
-
-
-/* 
-  fs.appendFile(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`),
-    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducers-list.mustache'), 'utf8'),
-      { fileName: answers.fileName }) + "\n",
-    (err) => {
+  fs.writeFile(path.resolve(__dirname, `${config.storeDir}/store.ts`),
+    replaceStore,
+    err => {
       if (err) throw err;
-      console.log('Reducer added to index.ts!');
+      console.log("Added store-list");
     }
-  ); */
- 
+  );
+
+  /* Add action const */
+  const ActionConstFile = fs.readFileSync(path.resolve(__dirname, '../../Definations/ActionConsts.ts'), 'utf8');
+
+  const replaceActionConst = ActionConstFile.replace(/export const ActionConsts\s[=]\s[{]/g,
+    mustache.render(
+      fs.readFileSync(path.resolve(__dirname, '../templates/reducers/action-const.mustache'), 'utf8'),
+      { fileName: answers.fileName }));
+
+  fs.writeFile(path.resolve(__dirname, '../../Definations/ActionConsts.ts'),
+    replaceActionConst,
+    err => {
+      if (err) throw err;
+      console.log("Added to actionConsts");
+    }
+  );
 };
+
+
 
 const createStyle = (answers) => {
   fs.writeFile(path.resolve(__dirname,
