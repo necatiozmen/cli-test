@@ -1,1 +1,1 @@
-export { Nee } from '@Components/Nee';
+export { Foo } from '@Components/Foo';
