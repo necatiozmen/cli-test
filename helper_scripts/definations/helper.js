@@ -6,6 +6,9 @@ const config = {
   pagesDir: '../../pages',
   componentsDir: '../../components',
   templatesDir: '../templates/',
+  reducerDir: '../../Redux/Reducers',
+  reducersListDir: '../../Redux',
+  storeDir: '../../Redux'
 
 };
 
@@ -16,28 +19,7 @@ const isAlreadyExist = (startPath, val, checkForDir) => {
     return fs.existsSync(path.resolve(__dirname, `${startPath}/${val}`));
   }
 
-  /*   const files = fs.readdirSync(startPath);
-  
-    console.log(files);
-     */
-
-  /*   for (let i = 0; i < files.length; i += 1) {
-  
-      const filename = path.join(startPath, files[i]);
-      console.log(filename);
-      
-      const stat = fs.lstatSync(filename);
-      console.log(stat.isDirectory());
-      
-      if (stat.isDirectory()) {
-        isUsedOnDir(filename, val); // recurse
-      } else if (filename.indexOf(val) >= 0) {
-        isFound = true;
-      }
-    } */
-
 }
-
 
 const createFuncComponent = (answers) => {
 
@@ -66,7 +48,7 @@ const createFuncComponent = (answers) => {
 
 
 const createClassComponent = (answers) => {
-  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
+  /*  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase()); */
 
   fs.mkdirSync(path.resolve(__dirname, `${answers.isPage ? config.pagesDir : config.componentsDir}/${answers.fileName}`));
 
@@ -90,26 +72,63 @@ const createClassComponent = (answers) => {
   createInterface(answers, isClass = true);
 }
 
-/* const createPage = (answers) => {
 
-  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
+const addReducer = (answers) => {
 
-  fs.mkdirSync(path.resolve(__dirname, `${config.pagesDir}/${answers.fileName}`));
+  /* Create reducer file */
+  fs.mkdirSync(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}`));
 
-  fs.writeFile(path.resolve(__dirname, `.${config.pagesDir}/${answers.fileName}/index.tsx`),
-    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/components/class.mustache'), 'utf8'),
-      {
-        fileName: answers.fileName, interfaceName: `I${answers.fileName}`,
-        isConnectStore: answers.isConnectStore, isHaveStyle: answers.isHaveStyle
-      })
+  fs.writeFile(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}/index.tsx`),
+    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducer.mustache'), 'utf8'),
+      { fileName: answers.fileName })
     , err => {
       if (err) throw err;
-      console.log("created new page");
+      console.log("Created a new reducer");
     })
 
-  createInterface(answers, isClass = true);
+  /* Add to reducers index.ts */
+  fs.appendFile(path.resolve(__dirname, `${config.reducerDir}/index.ts`),
+    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/index.mustache'), 'utf8'),
+      { fileName: answers.fileName }) + "\n",
+    (err) => {
+      if (err) throw err;
+      console.log('Reducer added to index.ts!');
+    }
+  );
 
-} */
+  /* Add to store-list */
+  const storeFile = fs.readFileSync(path.resolve(__dirname, `${config.storeDir}/store.ts`), 'utf8');
+
+  const replaceStore = storeFile.replace(/const reducers = combineReducers[(][{]/g,
+    mustache.render(
+      fs.readFileSync(path.resolve(__dirname, '../templates/reducers/store.mustache'), 'utf8'),
+      { fileName: answers.fileName }));
+
+  fs.writeFile(path.resolve(__dirname, `${config.storeDir}/store.ts`),
+    replaceStore,
+    err => {
+      if (err) throw err;
+      console.log("Added store-list");
+    }
+  );
+
+  /* Add action const */
+  const ActionConstFile = fs.readFileSync(path.resolve(__dirname, '../../Definations/ActionConsts.ts'), 'utf8');
+
+  const replaceActionConst = ActionConstFile.replace(/export const ActionConsts\s[=]\s[{]/g,
+    mustache.render(
+      fs.readFileSync(path.resolve(__dirname, '../templates/reducers/action-const.mustache'), 'utf8'),
+      { fileName: answers.fileName }));
+
+  fs.writeFile(path.resolve(__dirname, '../../Definations/ActionConsts.ts'),
+    replaceActionConst,
+    err => {
+      if (err) throw err;
+      console.log("Added to actionConsts");
+    }
+  );
+};
+
 
 
 const createStyle = (answers) => {
@@ -132,7 +151,6 @@ const createInterface = (answers, isClass) => {
       if (err) throw err;
       console.log("created component interface");
     })
-
 }
 
 const addIndex = (answers) => {
@@ -141,11 +159,9 @@ const addIndex = (answers) => {
       { fileName: answers.fileName }) + "\n",
     (err) => {
       if (err) throw err;
-      console.log('Added to index.ts!');
+      console.log('Component added to index.ts!');
     }
   );
-
-
 }
 
 module.exports = {
@@ -153,5 +169,6 @@ module.exports = {
   createFuncComponent,
   isAlreadyExist,
   createStyle,
-  createClassComponent
+  createClassComponent,
+  addReducer
 }
