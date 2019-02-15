@@ -30,6 +30,23 @@ const showQuestions = () => {
             default: false
         },
         {
+            type: 'list',
+            name: 'isHaveReducer',
+            message: 'Do you want to create a new reducer or use your own ?',
+            when: ({ isConnectStore }) => isConnectStore,
+            choices: [
+                new inquirer.Separator(),
+                {
+                    name: 'Yes, I want to have new reducer.',
+                    value: true
+                },
+                {
+                    name: 'No, do not create a new reducer.',
+                    value: false
+                }
+            ]
+        },
+        {
             type: 'confirm',
             name: 'isHaveStyle',
             message: 'Do you want styles file',
@@ -38,9 +55,16 @@ const showQuestions = () => {
     ];
 
     inquirer.prompt(questions).then(answers => {
+
+        answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
+
         helper.createClassComponent(answers);
+
         if (answers.isHaveStyle) {
-            helper.createStyle(answers)
+            helper.createStyle(answers);
+        }
+        if (answers.isHaveReducer) {
+            helper.addReducer(answers);
         }
     }
     )

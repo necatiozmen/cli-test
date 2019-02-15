@@ -6,6 +6,8 @@ const config = {
   pagesDir: '../../pages',
   componentsDir: '../../components',
   templatesDir: '../templates/',
+  reducerDir: '../../Redux/Reducers',
+  reducersListDir: '../../Redux'
 
 };
 
@@ -66,7 +68,7 @@ const createFuncComponent = (answers) => {
 
 
 const createClassComponent = (answers) => {
-  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
+  /*  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase()); */
 
   fs.mkdirSync(path.resolve(__dirname, `${answers.isPage ? config.pagesDir : config.componentsDir}/${answers.fileName}`));
 
@@ -90,27 +92,62 @@ const createClassComponent = (answers) => {
   createInterface(answers, isClass = true);
 }
 
-/* const createPage = (answers) => {
 
-  answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
+const addReducer = (answers) => {
+	
+  fs.mkdirSync(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}`));
 
-  fs.mkdirSync(path.resolve(__dirname, `${config.pagesDir}/${answers.fileName}`));
-
-  fs.writeFile(path.resolve(__dirname, `.${config.pagesDir}/${answers.fileName}/index.tsx`),
-    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/components/class.mustache'), 'utf8'),
-      {
-        fileName: answers.fileName, interfaceName: `I${answers.fileName}`,
-        isConnectStore: answers.isConnectStore, isHaveStyle: answers.isHaveStyle
-      })
+  fs.writeFile(path.resolve(__dirname, `${config.reducerDir}/${answers.fileName}/index.tsx`),
+    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducer.mustache'), 'utf8'),
+      { fileName: answers.fileName })
     , err => {
       if (err) throw err;
-      console.log("created new page");
+      console.log("Created a new reducer");
     })
 
-  createInterface(answers, isClass = true);
+  /* Add to reducers index.ts */
 
-} */
+  fs.appendFile(path.resolve(__dirname, `${config.reducerDir}/index.ts`),
+    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/index.mustache'), 'utf8'),
+      { fileName: answers.fileName }) + "\n",
+    (err) => {
+      if (err) throw err;
+      console.log('Reducer added to index.ts!');
+    }
+  );
 
+	/* Add to reducerlist */
+  const reducersFile = fs.readFileSync(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`), 'utf8');
+  
+   const replaceFile = reducersFile.replace(/};/g,
+       mustache.render(
+		   fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducers-list.mustache'), 'utf8'),
+          		 { fileName: answers.fileName }));
+
+   
+	fs.writeFile(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`),
+		replaceFile,
+		err => {
+			if (err) throw err;
+			console.log("Added reducers-list");
+		}
+	);
+
+
+
+
+
+/* 
+  fs.appendFile(path.resolve(__dirname, `${config.reducersListDir}/reducers.ts`),
+    mustache.render(fs.readFileSync(path.resolve(__dirname, '../templates/reducers/reducers-list.mustache'), 'utf8'),
+      { fileName: answers.fileName }) + "\n",
+    (err) => {
+      if (err) throw err;
+      console.log('Reducer added to index.ts!');
+    }
+  ); */
+ 
+};
 
 const createStyle = (answers) => {
   fs.writeFile(path.resolve(__dirname,
@@ -132,7 +169,6 @@ const createInterface = (answers, isClass) => {
       if (err) throw err;
       console.log("created component interface");
     })
-
 }
 
 const addIndex = (answers) => {
@@ -141,11 +177,9 @@ const addIndex = (answers) => {
       { fileName: answers.fileName }) + "\n",
     (err) => {
       if (err) throw err;
-      console.log('Added to index.ts!');
+      console.log('Component added to index.ts!');
     }
   );
-
-
 }
 
 module.exports = {
@@ -153,5 +187,6 @@ module.exports = {
   createFuncComponent,
   isAlreadyExist,
   createStyle,
-  createClassComponent
+  createClassComponent,
+  addReducer
 }

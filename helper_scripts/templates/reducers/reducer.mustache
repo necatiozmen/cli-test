@@ -1,0 +1,23 @@
+//#region Local Imports
+import { ActionConsts } from '@Definations';
+//#endregion Local Imports
+
+const INITIAL_STATE = {
+	
+};
+
+export const {{fileName}}Reducer = (state = INITIAL_STATE, action) => {
+	switch (action.type) {
+		case ActionConsts.{{fileName}}.SetReducer:
+			return {
+				...state,
+				...action.payload
+			};
+
+		case ActionConsts.{{fileName}}.ResetReducer:
+			return INITIAL_STATE;
+
+		default:
+			return state;
+	}
+};
