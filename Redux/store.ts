@@ -12,7 +12,7 @@ import { RavenService } from '@Services';
 
 export const initStore = (initialState = {}) => {
 	const reducers = combineReducers({
-		auth: Reducers.AuthReducer,
+		vendor: Reducers.VendorReducer
 	});
 
 	const ravenInstance = RavenService.getRavenInstance();

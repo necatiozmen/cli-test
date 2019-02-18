@@ -1,7 +1,4 @@
 const inquirer = require('inquirer');
-const mustache = require("mustache");
-const fs = require('fs');
-const path = require('path');
 const helper = require('./helper');
 
 const showQuestions = () => {
@@ -11,9 +8,9 @@ const showQuestions = () => {
             name: 'fileName',
             message: 'Enter new page name',
             validate(val) {
-                
-                if(val.length) {                    
-                    if(
+
+                if (val.length) {
+                    if (
                         helper.isAlreadyExist(
                             helper.config.pagesDir,
                             val,
@@ -34,6 +31,23 @@ const showQuestions = () => {
             default: false
         },
         {
+            type: 'list',
+            name: 'isHaveReducer',
+            message: 'Do you want to create a new reducer or use your own ?',
+            when: ({ isConnectStore }) => isConnectStore,
+            choices: [
+                new inquirer.Separator(),
+                {
+                    name: 'Yes, I want to have new reducer.',
+                    value: true
+                },
+                {
+                    name: 'No, do not create a new reducer.',
+                    value: false
+                }
+            ]
+        },
+        {
             type: 'confirm',
             name: 'isHaveStyle',
             message: 'Do you want styles file',
@@ -42,12 +56,15 @@ const showQuestions = () => {
     ];
 
     inquirer.prompt(questions).then(answers => {
+        answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
         answers.isPage = true;
         helper.createClassComponent(answers);
         if (answers.isHaveStyle) {
             helper.createStyle(answers)
         }
-       
+        if (answers.isHaveReducer) {
+            helper.addReducer(answers);
+        }
     }
     )
 }
