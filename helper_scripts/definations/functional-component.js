@@ -32,6 +32,7 @@ const showQuestions = () => {
     ];
 
     inquirer.prompt(questions).then(answers => {
+        
         helper.createFuncComponent(answers);
         if (answers.isHaveStyle) {
             helper.createStyle(answers)
