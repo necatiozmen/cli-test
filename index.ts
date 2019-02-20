@@ -2,9 +2,9 @@
 
 import * as chalk from 'chalk';
 import * as clear from 'clear';
+import * as program from 'commander';
 import * as figlet from 'figlet';
 import * as inquirer from 'inquirer';
-import * as program from 'commander';
 
 import { classComp } from './helper_scripts/definations/class-component';
 import { funcComp } from './helper_scripts/definations/functional-component';
@@ -19,13 +19,12 @@ console.log(
 
 const questions = [
 	{
-		type: 'list',
-		name: 'fileType',
+		choices: ['page', 'functional-component', 'class-component', 'interfaces'],
 		message: 'What do you want to create ?',
-		choices: ["page", "functional-component", "class-component", "interfaces"]
-	},
+		name: 'fileType',
+		type: 'list'
+	}
 ];
-
 
 program
 	.command('addFile')
@@ -50,6 +49,4 @@ program
 	}
 	);
 
-
 program.parse(process.argv);
-

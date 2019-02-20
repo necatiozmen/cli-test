@@ -1,5 +1,7 @@
 import * as inquirer from 'inquirer';
-import * as helper from './helper';
+import { DefinationsModel } from './Defination';
+import { Config, Helper } from './helper';
+
 
 export const funcComp = {
 	showQuestions: async (): Promise<void> => {
@@ -11,10 +13,9 @@ export const funcComp = {
 				validate(val: string) {
 					if (val.length) {
 						if (
-							helper.isAlreadyExist(
-								helper.config.componentsDir,
-								val,
-								true
+							Helper.isAlreadyExist(
+								Config.componentsDir,
+								val
 							)
 						) {
 							return 'Already added use new compoment name';
@@ -35,12 +36,12 @@ export const funcComp = {
 		];
 
 
-		const answers: { fileName: string, isHaveStyle: boolean } =
+		const answers: DefinationsModel.IAnswers =
 			await inquirer.prompt<{ fileName: string, isHaveStyle: boolean }>(questions);
 
-		helper.createFuncComponent(answers);
+		Helper.createFuncComponent(answers);
 		if (answers.isHaveStyle) {
-			helper.createStyle(answers)
+			Helper.createStyle(answers)
 		}
 
 	}

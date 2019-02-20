@@ -8,6 +8,10 @@
 	},
 	"exclude": [
 		"node_modules",
-		"dist"
+		"dist",
+		"Components",
+		"Redux",
+		"pages",
+		"Definations"
 	]
 }

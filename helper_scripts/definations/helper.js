@@ -3,20 +3,21 @@ const path = require('path');
 const mustache = require("mustache");
 
 const config = {
-  pagesDir: '../../pages',
-  componentsDir: '../../Components',
-  reducerDir: '../../Redux/Reducers',
-  reducersListDir: '../../Redux',
-  storeDir: '../../Redux',
-  defConstDir: '../../Definations'
+  pagesDir: '../../../pages',
+  componentsDir: '../../../Components',
+  reducerDir: '../../../Redux/Reducers',
+  reducersListDir: '../../../Redux',
+  storeDir: '../../../Redux',
+  defConstDir: '../../../Definations'
 };
 
-const isAlreadyExist = (startPath, val, checkForDir) => {
+const isAlreadyExist = (startPath, val) => {
 
-  if (checkForDir) {
+ console.log("dirname",__dirname);
+ 
     val = val.replace(/\b\w/g, foo => foo.toUpperCase());
     return fs.existsSync(path.resolve(__dirname, `${startPath}/${val}`));
-  }
+  
 
 }
 
@@ -94,7 +95,7 @@ const addActionConstIndex = (templateProps) => {
   const actionConstsRegex = /export const ActionConsts\s[=]\s[{]/g;
   const actionConstFile = fs.readFileSync(path.resolve(__dirname, `${config.defConstDir}/ActionConsts.ts`), 'utf8');
   const actionConstTemplate = '../templates/reducers/action-const.mustache';
-  const actionConstDir = '../../Definations/ActionConsts.ts';
+  const actionConstDir = '../../../Definations/ActionConsts.ts';
   const actionConstsMessage = "Added to actionConsts";
 
   replaceContent(actionConstFile, actionConstsRegex,
@@ -138,6 +139,7 @@ const addIndex = (dirPath, getFileContent, message) => {
 }
 
 const createFile = dirPath => {
+  console.log(path.resolve(__dirname, dirPath))
   fs.mkdirSync(path.resolve(__dirname, dirPath));
 }
 

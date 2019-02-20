@@ -1,5 +1,6 @@
 import * as inquirer from 'inquirer';
-import * as helper from './helper';
+import { DefinationsModel } from './Defination';
+import { Config, Helper } from './helper';
 
 export const pageComp = {
 	showQuestions: async (): Promise<void> => {
@@ -11,10 +12,9 @@ export const pageComp = {
 				validate(val: string) {
 					if (val.length) {
 						if (
-							helper.isAlreadyExist(
-								helper.config.componentsDir,
-								val,
-								true
+							Helper.isAlreadyExist(
+								Config.pagesDir,
+								val
 							)
 						) {
 							return 'Already added use new compoment name';
@@ -57,19 +57,18 @@ export const pageComp = {
 			}
 		];
 
-		const answers: { fileName: string, isHaveStyle: boolean, isHaveReducer:
-			boolean, isConnectStore: boolean, isPage: boolean } = await inquirer.prompt<{ fileName: string, isHaveStyle: boolean, isHaveReducer:
+		const answers: DefinationsModel.IAnswers = await inquirer.prompt<{ fileName: string, isHaveStyle: boolean, isHaveReducer:
 			   boolean, isConnectStore: boolean }>(questions);
 
 		answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
 		answers.isPage = true;
-		helper.createClassComponent(answers);
+		Helper.createClassComponent(answers);
 
 		if (answers.isHaveStyle) {
-			helper.createStyle(answers)
+			Helper.createStyle(answers)
 		}
 		if (answers.isHaveReducer) {
-			helper.addReducer(answers);
+			Helper.addReducer(answers);
 		}
 	}
 };
