@@ -64,7 +64,7 @@
 		"no-bitwise": true,
 		"no-conditional-assignment": true,
 		"no-console": [
-			true
+			false
 		],
 		"no-construct": true,
 		"no-debugger": true,

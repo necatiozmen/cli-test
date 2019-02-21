@@ -9,7 +9,7 @@ export const classComp = {
 				message: 'Enter class based component name',
 				name: 'fileName',
 				type: 'input',
-				validate(val: string) {
+				validate(val: string): string | boolean {
 					if (val.length) {
 						if (
 							Helper.isAlreadyExist(
@@ -23,7 +23,7 @@ export const classComp = {
 						return true;
 					}
 
-					return 'Cannot be empty'
+					return 'Cannot be empty';
 				}
 			},
 			{

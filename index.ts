@@ -12,14 +12,14 @@ import { pageComp } from './helper_scripts/definations/page-component';
 
 clear();
 console.log(
-	chalk.yellow(
-		figlet.textSync('PANKOD', { horizontalLayout: 'fitted' })
+	chalk.default(
+		figlet.textSync('PANKOD')
 	)
 );
 
 const questions = [
 	{
-		choices: ['page', 'functional-component', 'class-component', 'interfaces'],
+		choices: ['page', 'functional-component', 'class-component'],
 		message: 'What do you want to create ?',
 		name: 'fileType',
 		type: 'list'
@@ -30,23 +30,21 @@ program
 	.command('addFile')
 	.alias('a')
 	.description('Add a file')
-	.action(() => {
-		inquirer.prompt(questions).then((answers: { fileType: string }) => {
-			switch (answers.fileType) {
-				case 'functional-component':
-					funcComp.showQuestions();
-					break;
-				case 'class-component':
-					classComp.showQuestions();
-					break;
-				case 'page':
-					pageComp.showQuestions();
-				default:
-					break;
-			}
+	.action(async () => {
+		const answers: { fileType: string } = await inquirer.prompt(questions);
+		switch (answers.fileType) {
+			case 'functional-component':
+				await funcComp.showQuestions();
+				break;
+			case 'class-component':
+				await classComp.showQuestions();
+				break;
+			case 'page':
+				await pageComp.showQuestions();
+				break;
+			default:
+				break;
 		}
-		)
-	}
-	);
+	});
 
 program.parse(process.argv);

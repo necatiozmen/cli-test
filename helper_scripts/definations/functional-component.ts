@@ -2,7 +2,6 @@ import * as inquirer from 'inquirer';
 import { DefinationsModel } from './Defination';
 import { Config, Helper } from './helper';
 
-
 export const funcComp = {
 	showQuestions: async (): Promise<void> => {
 		const questions = [
@@ -10,7 +9,7 @@ export const funcComp = {
 				message: 'Enter functional component name',
 				name: 'fileName',
 				type: 'input',
-				validate(val: string) {
+				validate(val: string): string | boolean {
 					if (val.length) {
 						if (
 							Helper.isAlreadyExist(
@@ -35,13 +34,12 @@ export const funcComp = {
 			},
 		];
 
-
 		const answers: DefinationsModel.IAnswers =
 			await inquirer.prompt<{ fileName: string, isHaveStyle: boolean }>(questions);
 
 		Helper.createFuncComponent(answers);
 		if (answers.isHaveStyle) {
-			Helper.createStyle(answers)
+			Helper.createStyle(answers);
 		}
 
 	}

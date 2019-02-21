@@ -10,6 +10,8 @@ export declare module DefinationsModel {
 		isHaveStyle?: boolean;
 		isConnectStore?: boolean;
 		isClass?: boolean;
+		isHavePath?: boolean;
+		routePath?: string;
 	}
 
 	export interface IAnswers {
@@ -19,14 +21,16 @@ export declare module DefinationsModel {
 		isConnectStore?: boolean;
 		isPage?: boolean;
 		isHaveReducer?: boolean;
+		isHavePath?: boolean;
+		routePath?: string;
 	}
 
 	export interface IReplaceContent {
 		filetoUpdate: string;
-		regexKey: RegExp;
-		getFileContent: Function;
 		fileDir: string;
+		regexKey: RegExp;
 		message: string;
+		getFileContent(): string;
 	}
 
 	export interface IAddIndex {

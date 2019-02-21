@@ -22,7 +22,10 @@
     "mustache": "^3.0.1"
   },
   "devDependencies": {
+    "@types/figlet": "^1.2.0",
+    "@types/node": "^11.9.4",
     "@types/inquirer": "0.0.43",
+    "@types/mustache": "^0.8.32",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   }

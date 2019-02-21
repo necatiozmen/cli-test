@@ -1,6 +1,7 @@
 import * as inquirer from 'inquirer';
 import { DefinationsModel } from './Defination';
 import { Config, Helper } from './helper';
+import { log } from 'util';
 
 export const pageComp = {
 	showQuestions: async (): Promise<void> => {
@@ -9,7 +10,7 @@ export const pageComp = {
 				message: 'Enter class based component name',
 				name: 'fileName',
 				type: 'input',
-				validate(val: string) {
+				validate(val: string): string | boolean {
 					if (val.length) {
 						if (
 							Helper.isAlreadyExist(
@@ -23,14 +24,37 @@ export const pageComp = {
 						return true;
 					}
 
-					return 'Cannot be empty'
+					return 'Cannot be empty';
 				}
 			},
+			{
+				choices: [
+					new inquirer.Separator(),
+					{
+						name: 'Yes, new I want to use special path?',
+						value: true
+					},
+					{
+						name: 'No, use default.',
+						value: false
+					}
+				],
+				message: 'Do you want to add special route path or use default?',
+				name: 'isHavePath',
+				type: 'list'
+			},
+			{
+				message: 'Enter route path',
+				name: 'routePath',
+				type: 'input',
+				when: ({ isHavePath }) => isHavePath
+			},
+
 			{
 				default: false,
 				message: 'Do you want to connect store',
 				name: 'isConnectStore',
-				type: 'confirm',
+				type: 'confirm'
 			},
 			{
 				choices: [
@@ -58,17 +82,20 @@ export const pageComp = {
 		];
 
 		const answers: DefinationsModel.IAnswers = await inquirer.prompt<{ fileName: string, isHaveStyle: boolean, isHaveReducer:
-			   boolean, isConnectStore: boolean }>(questions);
+			   boolean, isConnectStore: boolean, isHavePath: boolean, routePath: string}>(questions);
 
 		answers.fileName = answers.fileName.replace(/\b\w/g, foo => foo.toUpperCase());
 		answers.isPage = true;
 		Helper.createClassComponent(answers);
 
 		if (answers.isHaveStyle) {
-			Helper.createStyle(answers)
+			Helper.createStyle(answers);
 		}
 		if (answers.isHaveReducer) {
 			Helper.addReducer(answers);
+		}
+		if (answers.isHavePath) {
+			Helper.addRoute(answers);
 		}
 	}
 };

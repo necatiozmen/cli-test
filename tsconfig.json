@@ -4,7 +4,9 @@
 		"module": "commonjs",
 		"outDir": "./dist",
 		"sourceMap": true,
-		"allowJs": true
+		"allowJs": true,
+		"rootDir": ".",
+		"baseUrl": "."
 	},
 	"exclude": [
 		"node_modules",
@@ -12,6 +14,7 @@
 		"Components",
 		"Redux",
 		"pages",
-		"Definations"
+		"Definations",
+		"app"
 	]
 }
