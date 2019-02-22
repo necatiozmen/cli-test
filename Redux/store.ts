@@ -12,6 +12,12 @@ import { RavenService } from '@Services';
 
 export const initStore = (initialState = {}) => {
 	const reducers = combineReducers({
+        Necati: Reducers.NecatiReducer,
+        Classtest4: Reducers.Classtest4Reducer,
+        Testclass2: Reducers.Testclass2Reducer,
+        ClassComp1: Reducers.ClassComp1Reducer,
+        Pagetest2: Reducers.Pagetest2Reducer,
+        PAGE1: Reducers.PAGE1Reducer,
 		vendor: Reducers.VendorReducer
 	});
 

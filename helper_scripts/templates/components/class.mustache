@@ -1,10 +1,8 @@
 //#region Global Imports
 import * as React from 'react';
-
 {{#isConnectStore}}
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { {{interfaceName}}, IStore } from '@Interfaces';
 {{/isConnectStore}}
 //#endregion Global Imports
 
@@ -15,7 +13,7 @@ import './Styles.scss';
 //#endregion Local Imports
 
 //#region Interface Imports
-import { {{interfaceName}} } from './{{interfaceName}}';
+import { {{interfaceName}} } from './{{fileName}}';
 //#endregion Interface Imports
 
 class {{fileName}} extends React.Component<{{interfaceName}}.IProps, {{interfaceName}}.IState> {
@@ -30,17 +28,16 @@ class {{fileName}} extends React.Component<{{interfaceName}}.IProps, {{interface
 	public render(): JSX.Element {
 		return (
 			<div className="{{fileName}}">
-				{{fileName}} 
+				{{fileName}}
 			</div>
 		);
 	}
 }
 
 {{#isConnectStore}}
-const mapStateToProps = (state: IStore) => state;
+const mapStateToProps = state => state;
 
 const mapDispatchToProps = (dispatch: Dispatch) => (
-
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)({{fileName}});
