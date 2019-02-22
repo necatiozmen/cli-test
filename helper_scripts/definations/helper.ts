@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as logSymbols from 'log-symbols';
 import * as mustache from 'mustache';
 import * as path from 'path';
 import { DefinationsModel } from './Defination';
@@ -9,21 +10,25 @@ export const Config = {
 	pagesDir: './pages',
 	reducerDir: './Redux/Reducers',
 	reducersListDir: './Redux',
-	storeDir: './Redux',
-	routesDir: './app'
+	routesDir: './app',
+	storeDir: './Redux'
 };
 
 export const Helper = {
 
 	addRoute: (answers: DefinationsModel.IAnswers) => {
-		const templateProps = { fileName: answers.fileName, routePath: answers.routePath, isHavePath: answers.isHavePath };
+		const templateProps = {
+			fileName: answers.fileName.replace(/\b\w/g, foo => foo.toLowerCase()),
+			routePath: answers.routePath,
+			isHavePath: answers.isHavePath
+		};
 
 		const replaceContentParams: DefinationsModel.IReplaceContent = {
 			fileDir: `${Config.routesDir}/routes.js`,
 			filetoUpdate: fs.readFileSync(path.resolve('', `${Config.routesDir}/routes.js`), 'utf8'),
 			getFileContent: () => Helper.getTemplate('./helper_scripts/templates/routes.mustache', templateProps),
 			message: 'Added route path to routes.js',
-			regexKey: /^(?:[\t ]*(?:\r?\n|\r))+module.exports = routes;/g
+			regexKey: /^(?:[\t ]*(?:\r?\n|\r))+module.exports = routes;/gm
 		};
 
 		Helper.replaceContent(replaceContentParams);
@@ -49,7 +54,7 @@ export const Helper = {
 			params.getFileContent(),
 			err => {
 				if (err) throw err;
-				console.log(params.message);
+				console.log(logSymbols.success, params.message);
 			}
 		);
 	},
@@ -64,7 +69,7 @@ export const Helper = {
 			`${params.getFileContent()}\n`,
 			err => {
 				if (err) throw err;
-				console.log(params.message);
+				console.log(logSymbols.success, params.message);
 			}
 		);
 	},
@@ -72,9 +77,11 @@ export const Helper = {
 	createInterface: (answers: DefinationsModel.IAnswers, isClass: boolean) => {
 		const templatePath = './helper_scripts/templates/interfaces/component.d.mustache';
 		const templateProps = { fileName: answers.fileName, isClass };
+		const pageDirPath  = `${Config.pagesDir}/${answers.fileName.replace(/\b\w/g, foo => foo.toLowerCase())}/${answers.fileName}.d.ts`;
+		const compDirPath = `${Config.componentsDir}/${answers.fileName}/${answers.fileName}.d.ts`;
 
 		const writeFileProps: DefinationsModel.IWriteFile = {
-			dirPath: `${answers.isPage ? Config.pagesDir : Config.componentsDir}/${answers.fileName}/${answers.fileName}.d.ts`,
+			dirPath: answers.isPage ? pageDirPath : compDirPath,
 			getFileContent: () => Helper.getTemplate(templatePath, templateProps),
 			message: 'Created new interface file.'
 		};
@@ -85,9 +92,11 @@ export const Helper = {
 	createStyle: (answers: DefinationsModel.IAnswers): void => {
 		const templatePath = './helper_scripts/templates/styles.mustache';
 		const templateProps = { fileName: answers.fileName };
+		const pageDirPath  = `${Config.pagesDir}/${answers.fileName.replace(/\b\w/g, foo => foo.toLowerCase())}/Styles.scss`;
+		const compDirPath = `${Config.componentsDir}/${answers.fileName}/Styles.scss`;
 
 		const writeFileProps = {
-			dirPath: `${answers.isPage ? Config.pagesDir : Config.componentsDir}/${answers.fileName}/style.scss`,
+			dirPath: answers.isPage ? pageDirPath : compDirPath,
 			getFileContent: () => Helper.getTemplate(templatePath, templateProps),
 			message: 'Created new style file'
 		};
@@ -140,13 +149,13 @@ export const Helper = {
 		const addIndexParams: DefinationsModel.IAddIndex = {
 			dirPath: `${Config.reducerDir}/index.ts`,
 			getFileContent: () => Helper.getTemplate(indexTemplate, templateProps),
-			message: 'Reducer added to index.ts'
+			message: 'Reducer added to index.ts.'
 		};
 
 		const writeFileProps: DefinationsModel.IWriteFile = {
 			dirPath: `${redDir}/index.tsx`,
 			getFileContent: () => Helper.getTemplate(reducerTemplate, templateProps),
-			message: 'Created new style file'
+			message: 'Created new reducer file.'
 		};
 
 		Helper.createFile(redDir);
@@ -157,24 +166,27 @@ export const Helper = {
 	},
 
 	createClassComponent: (answers: DefinationsModel.IAnswers): void => {
-		const classDir = `${answers.isPage ? Config.pagesDir : Config.componentsDir}/${answers.fileName}`;
+		const pagesDir = `${Config.pagesDir}/${answers.fileName.replace(/\b\w/g, foo => foo.toLowerCase())}`;
+		const classDir = answers.isPage ? pagesDir : `${Config.componentsDir}/${answers.fileName}`;
 		const templatePath = './helper_scripts/templates/components/class.mustache';
 		const templateProps = {
-			fileName: answers.fileName, interfaceName: `I${answers.fileName}`,
-			isConnectStore: answers.isConnectStore, isHaveStyle: answers.isHaveStyle
+			fileName: answers.fileName, 
+			interfaceName: `I${answers.fileName}`,
+			isConnectStore: answers.isConnectStore,
+			isHaveStyle: answers.isHaveStyle
 		};
 		const indexTemplate = './helper_scripts/templates/components/index.mustache';
 
 		const addIndexParams: DefinationsModel.IAddIndex = {
 			dirPath: `${Config.componentsDir}/index.ts`,
 			getFileContent: () => Helper.getTemplate(indexTemplate, templateProps),
-			message: 'Component added to index.ts'
+			message: 'Component added to index.ts.'
 		};
 
 		const writeFileProps: DefinationsModel.IWriteFile = {
 			dirPath: `${classDir}/index.tsx`,
 			getFileContent: () => Helper.getTemplate(templatePath, templateProps),
-			message: 'Added new class based component'
+			message: 'Added new class component.'
 		};
 
 		Helper.createFile(classDir);
@@ -205,7 +217,7 @@ export const Helper = {
 		const writeFileProps: DefinationsModel.IWriteFile = {
 			dirPath: `${funcDir}/index.tsx`,
 			getFileContent: () => Helper.getTemplate(templatePath, templateProps),
-			message: 'Created new functional component'
+			message: 'Created new functional component.'
 		};
 
 		Helper.createFile(funcDir);

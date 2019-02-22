@@ -19,6 +19,7 @@
     "commander": "^2.19.0",
     "figlet": "^1.2.1",
     "inquirer": "^6.2.2",
+    "log-symbols": "^2.2.0",
     "mustache": "^3.0.1"
   },
   "devDependencies": {
